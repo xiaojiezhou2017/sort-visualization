@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper">
+    </div>
+    <div>
+        <button onclick="handleChose('shellSort')">希尔排序</button>
+        <button onclick="handleChose('insertSort')">插入排序</button>
+        <button onclick="handleChose('choiceSort')">选择排序</button>
+        <button onClick="handleNext()">点击开始下一步排序</button>
+        <button onClick="handleAll()">开始执行动画</button>
+    </div>
+</body>
+<style>
+    html, body {
+        width: 100%;
+    }
+    .wrapper {
+        position: relative;
+        top: 200px;
+    }
+    .child {
+        position: absolute;
+        background: #fff;
+        border-radius: 50%;
+        border:1px solid red;
+        text-align: center;
+    }
+</style>
+<script src="render.js"></script>
+<script src="alg.js"></script>
+<script>
+    let type = 'shellSort'
+    function handleNext (event) {
+        render.next();
+    }
+    function handleAll () {
+        render.renderAnimation();
+    }
+    function handleChose (t) {
+        const arr = [];
+        for (let i = 21; i > 0; i--) {
+            arr.push(i);
+        }
+        type = t;
+        render.render(arr);
+        const opts = Sort.run(arr, type);
+        render.pushAction(opts);
+        render.speed = 50;
+    }
+</script>
+</html>
