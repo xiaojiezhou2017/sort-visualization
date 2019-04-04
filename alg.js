@@ -64,7 +64,47 @@ const Sort = {
             }
         }
     },
+
+    mergeSort (a) {
+        const that = this;
+        _sort(a, 0, a.length - 1)
+        function _sort(a, low, high) {
+            if (high <= low) {
+                return
+            }
+            const mid = low + parseInt((high - low) / 2)
+            _sort(a, low, mid)
+            _sort(a, mid + 1, high)
+            merge(a, low, mid, high)
+        }
+
+        function merge (a, low, mid, high) {
+            const temp = [];
+            let i = low, j = mid + 1;
+            for (let k = low; k <= high; k++) {
+                temp[k] = a[k];
+            }
+            for (let k = low; k <= high; k++) {
+                // let i = low, j = mid + 1; 这段代码放在这里为什么有问题
+                if (i > mid) {
+                    a[k] = temp[j++]
+                    that.operations.push([k, j, 'exchange'])
+                } else if (j > high) {
+                    a[k] = temp[i++]
+                    that.operations.push([k, i, 'exchange'])
+                } else if (temp[j] > temp[i]) {
+                    a[k] = temp[i++]
+                    that.operations.push([i, k, 'exchange'])
+                } else {
+                    a[k] = temp[j++]
+                    that.operations.push([k, j, 'exchange'])
+                }
+            }
+        }
+    },
+
     run (arr, type) {
+        this.operations = [];
         this[type](arr);
         return this.operations;
     }

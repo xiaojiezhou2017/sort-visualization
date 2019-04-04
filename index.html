@@ -13,6 +13,8 @@
         <button onclick="handleChose('shellSort')">希尔排序</button>
         <button onclick="handleChose('insertSort')">插入排序</button>
         <button onclick="handleChose('choiceSort')">选择排序</button>
+        <button onclick="handleChose('mergeSort')">归并排序</button>
+        <button onclick="handleReset()">重置</button>
         <button onClick="handleNext()">点击开始下一步排序</button>
         <button onClick="handleAll()">开始执行动画</button>
     </div>
@@ -36,23 +38,26 @@
 <script src="render.js"></script>
 <script src="alg.js"></script>
 <script>
-    let type = 'shellSort'
     function handleNext (event) {
         render.next();
     }
     function handleAll () {
         render.renderAnimation();
     }
+    function handleReset () {
+        render.reset();
+    }
     function handleChose (t) {
         const arr = [];
         for (let i = 21; i > 0; i--) {
             arr.push(i);
         }
-        type = t;
+        console.log('t', t);
         render.render(arr);
-        const opts = Sort.run(arr, type);
+        const opts = Sort.run(arr, t);
+        console.log('opst', opts[0]);
         render.pushAction(opts);
-        render.speed = 50;
+        render.speed = 30;
     }
 </script>
 </html>

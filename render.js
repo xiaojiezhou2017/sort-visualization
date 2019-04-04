@@ -7,6 +7,7 @@ const render = {
     animationQueue: [],
     children: null,
     status: 'finished',
+    isStop: false,
     render (data) {
         const wrapper = document.querySelector('.wrapper');
         const fragment  =  document.createDocumentFragment();
@@ -146,13 +147,22 @@ const render = {
     },
 
     async renderAnimation () {
+        this.isStop = false;
         if (this.status === 'doing') {
             return;
         }
         const animationQueue = this.animationQueue.slice(this.index);
         while (animationQueue.length) {
+            if (this.isStop) break;
             const an = animationQueue.shift();
             await this.exchange(an[0], an[1], an[2]);
         }
+    },
+
+    reset () {
+        this.status = 'finished';
+        this.index = 0;
+        this.isStop = true;
+        this.children = null;
     }
 };
