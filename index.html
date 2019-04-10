@@ -45,14 +45,32 @@
     function handleNext (event) {
         render.next();
     }
+
     function handleAll () {
         render.renderAnimation();
     }
+
     function handleReset () {
         render.reset();
     }
+
+    // 打乱数组的顺序
+    function shuffle (arr) {
+        const getRandom = (start, end) => start + Math.floor(Math.random() * (end - start));
+        const exchange = (arr, x, y) => [arr[x], arr[y]] = [arr[y], arr[x]];
+        const len = arr.length;
+        for (let i = 0; i < len - 1; i++) {
+            const y = getRandom(i, len);
+            exchange(arr, i, y);
+        }
+    }
+
     function handleChose (t) {
-        const arr = [5, 1, 10, 8, 7, 6, 3, 4, 2];
+        let arr = [];
+        for (let i = 0; i < 15; i++) {
+            arr[i] = i;
+        }
+        shuffle(arr);
         render.render(arr);
         const opts = Sort.run(arr, t);
         render.pushAction(opts);

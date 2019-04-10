@@ -21,7 +21,7 @@ const Sort = {
         for (let i = 0; i < len; i++) {
             let minIndex = i;
             for (let j = i+1; j < len; j++) {
-                this.operations.push([minIndex, j])
+                this.operations.push([minIndex, j, 'compare'])
                 if (a[minIndex] > a[j]) {
                     minIndex = j;
                 }

@@ -182,5 +182,6 @@ const render = {
         this.index = 0;
         this.isStop = true;
         this.children = null;
+        this.showInfo('');
     }
 };
