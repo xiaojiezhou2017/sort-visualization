@@ -1,6 +1,7 @@
 const Sort = {
     exchangeNum: 0,
     diffNum: 0,
+    stand: '', // 标识快速排序的基准元素
     exch(a, i, j)  {
         [a[j], a[i]] = [a[i], a[j]];
     },
@@ -89,6 +90,7 @@ const Sort = {
             return;
         }
         const stand = a[start];
+        this.stand = stand;
         // 表示基准
         // this.operations.push([start, end, 'moveTwo']);
         this.addOprations([start, end, 'moveTwo']);
@@ -143,7 +145,7 @@ const Sort = {
         }
         this.operations.push(opt);
         this.operations.push([
-            `比较次数:${this.diffNum} 交换次数:${this.exchangeNum}`, 
+            `比较次数:${this.diffNum} 交换次数:${this.exchangeNum} 基准元素：${this.stand}`, 
             undefined, 
             'info'
         ]);
