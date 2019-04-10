@@ -51,6 +51,9 @@ const render = {
         })
     },
     exchange (x, y, type) {
+        if (type === 'info') {
+          return this.showInfo(x);
+        }
         const { getPosition }  = this;
         const xEle = this.getElement(x);
         const yEle = this.getElement(y);
@@ -68,10 +71,21 @@ const render = {
             } else {
                 return Promise.all([this.move(xEle, R, true, xPos), this.move(yEle, R, false, yPos)]);
             }
-        } else {
+        } else if (type === 'compare')  {
             return this.heightLight(xEle, yEle);
+        } else if (type === 'moveTwo') {
+            return this.moveLineTwo(xEle, yEle);
         }
-
+    },
+    // 用来暂定动画，更新要展示的信息
+    showInfo (x) {
+        const infoDom = document.querySelector('#info');
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                infoDom.innerHTML = x;
+                resolve();
+            }, 100)
+        })
     },
 
     moveLine (target) {
@@ -93,6 +107,10 @@ const render = {
                 target.style.top = top + 'px';
             }, this.speed);
         })
+    },
+    // 同时移动两个元素，用来标识边界
+    moveLineTwo (x, y) {
+        return Promise.all([this.moveLine(x), this.moveLine(y)]);
     },
 
     move (target, R, dir, pos) {

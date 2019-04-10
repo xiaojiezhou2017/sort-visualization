@@ -65,42 +65,51 @@ const Sort = {
         }
     },
 
-    mergeSort (a) {
-        const that = this;
-        _sort(a, 0, a.length - 1)
-        function _sort(a, low, high) {
-            if (high <= low) {
-                return
-            }
-            const mid = low + parseInt((high - low) / 2)
-            _sort(a, low, mid)
-            _sort(a, mid + 1, high)
-            merge(a, low, mid, high)
+    // 快速排序
+    _quickSort (a, start, end) {
+        if (end <= start) {
+            return;
         }
-
-        function merge (a, low, mid, high) {
-            const temp = [];
-            let i = low, j = mid + 1;
-            for (let k = low; k <= high; k++) {
-                temp[k] = a[k];
+        const stand = a[start];
+        this.operations.push([`快速排序:基准：${stand} 边界:${start}-${end} 边界值：${a[start]} - ${a[end]}`, undefined, 'info']);
+        // 表示基准
+        this.operations.push([start, end, 'moveTwo']);
+        // this.operations.push([start, start, 'exchange']);
+        let i = start;
+        let j = end;
+        while (i < j) {
+            while (j > i) {
+              this.operations.push([j, i, 'compare']);
+              if (a[j] > stand) {
+                  j--
+              } else {
+                  break;
+              }
             }
-            for (let k = low; k <= high; k++) {
-                // let i = low, j = mid + 1; 这段代码放在这里为什么有问题
-                if (i > mid) {
-                    a[k] = temp[j++]
-                    that.operations.push([k, j, 'exchange'])
-                } else if (j > high) {
-                    a[k] = temp[i++]
-                    that.operations.push([k, i, 'exchange'])
-                } else if (temp[j] > temp[i]) {
-                    a[k] = temp[i++]
-                    that.operations.push([i, k, 'exchange'])
+            if (a[j] < stand) {
+                this.operations.push([i, j, 'exchange']);
+                this.exch(a, i, j);
+            }
+            while (j > i) {
+                this.operations.push([i, j, 'compare']);
+                if (a[i] < stand) {
+                    i++
                 } else {
-                    a[k] = temp[j++]
-                    that.operations.push([k, j, 'exchange'])
+                    break;
                 }
             }
+            if (a[i] > stand) {
+                this.operations.push([i, j, 'exchange']);
+                this.exch(a, i, j);
+            }
         }
+        // a[i] = stand;
+        this._quickSort(a, start, j-1);
+        this._quickSort(a, j+1, end);
+    },
+
+    quickSort (arr) {
+        this._quickSort(arr, 0, arr.length - 1);
     },
 
     run (arr, type) {

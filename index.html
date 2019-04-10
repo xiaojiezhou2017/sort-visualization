@@ -13,10 +13,11 @@
         <button onclick="handleChose('shellSort')">希尔排序</button>
         <button onclick="handleChose('insertSort')">插入排序</button>
         <button onclick="handleChose('choiceSort')">选择排序</button>
-        <button onclick="handleChose('mergeSort')">归并排序</button>
+        <button onclick="handleChose('quickSort')">快速排序</button>
         <button onclick="handleReset()">重置</button>
         <button onClick="handleNext()">点击开始下一步排序</button>
         <button onClick="handleAll()">开始执行动画</button>
+        <h2 id="info"></h2>
     </div>
 </body>
 <style>
@@ -34,6 +35,9 @@
         border:1px solid red;
         text-align: center;
     }
+    #info {
+        color: red;
+    }
 </style>
 <script src="render.js"></script>
 <script src="alg.js"></script>
@@ -48,16 +52,12 @@
         render.reset();
     }
     function handleChose (t) {
-        const arr = [];
-        for (let i = 21; i > 0; i--) {
-            arr.push(i);
-        }
-        console.log('t', t);
+        const arr = [5, 1, 10, 8, 7, 6, 3, 4, 2];
         render.render(arr);
         const opts = Sort.run(arr, t);
-        console.log('opst', opts[0]);
         render.pushAction(opts);
-        render.speed = 30;
+        render.speed = 50;
+        console.log('arr', arr);
     }
 </script>
 </html>
