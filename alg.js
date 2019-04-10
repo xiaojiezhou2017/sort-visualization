@@ -1,4 +1,6 @@
 const Sort = {
+    exchangeNum: 0,
+    diffNum: 0,
     exch(a, i, j)  {
         [a[j], a[i]] = [a[i], a[j]];
     },
@@ -21,17 +23,24 @@ const Sort = {
         for (let i = 0; i < len; i++) {
             let minIndex = i;
             for (let j = i+1; j < len; j++) {
-                this.operations.push([minIndex, j, 'compare'])
+                // this.operations.push([minIndex, j, 'compare'])
+                this.addOprations([minIndex, j, 'compare']);
                 if (a[minIndex] > a[j]) {
                     minIndex = j;
                 }
             }
-            this.operations.push([i, minIndex, 'exchange'])
+            // this.operations.push([i, minIndex, 'exchange'])
+            this.addOprations([i, minIndex, 'exchange']);
             this.exch(a,minIndex, i)
         }
     },
     // 希尔排序
     shellSort (a) {
+        this.operations.push([
+            `选择排序: 比较次数:${this.diffNum} 交换次数:${this.exchangeNum}`, 
+            undefined, 
+            'info'
+        ]);
         const len = a.length;
         let h = 1;
         while (h < len / 3) {
@@ -40,9 +49,11 @@ const Sort = {
         while (h >= 1) {
             for (let i = h; i < len; i++) {
                 for (let j = i; j >= h; j-=h) {
-                    this.operations.push([j-h, j, 'compare'])
+                    // this.operations.push([j-h, j, 'compare'])
+                    this.addOprations([j-h, j, 'compare']);
                     if (a[j] < a[j-h]) {
-                        this.operations.push([j-h, j, 'exchange'])
+                        // this.operations.push([j-h, j, 'exchange'])
+                        this.addOprations([j-h, j, 'exchange']);
                         this.exch(a, j, j-h);
                     }
                 }
@@ -53,12 +64,19 @@ const Sort = {
     },
     // 简单插入排序
     insertSort (a) {
+        this.operations.push([
+            `选择排序: 比较次数:${this.diffNum} 交换次数:${this.exchangeNum}`, 
+            undefined, 
+            'info'
+        ]);
         const len = a.length;
         for (let i = 0; i < len; i++) {
             for (let j = i; j > 0; j--) {
-                this.operations.push([j-1, j, 'compare'])
+                // this.operations.push([j-1, j, 'compare'])
+                this.addOprations([j-1, j, 'compare']);
                 if (a[j] < a[j-1]) {
-                    this.operations.push([j-1, j, 'exchange'])
+                    // this.operations.push([j-1, j, 'exchange'])
+                    this.addOprations([j-1, j, 'exchange']);
                     this.exch(a, j, j-1)
                 }
             }
@@ -71,15 +89,16 @@ const Sort = {
             return;
         }
         const stand = a[start];
-        this.operations.push([`快速排序:基准：${stand} 边界:${start}-${end} 边界值：${a[start]} - ${a[end]}`, undefined, 'info']);
         // 表示基准
-        this.operations.push([start, end, 'moveTwo']);
+        // this.operations.push([start, end, 'moveTwo']);
+        this.addOprations([start, end, 'moveTwo']);
         // this.operations.push([start, start, 'exchange']);
         let i = start;
         let j = end;
         while (i < j) {
             while (j > i) {
-              this.operations.push([j, i, 'compare']);
+              // this.operations.push([j, i, 'compare']);
+              this.addOprations([j, i, 'compare']);
               if (a[j] > stand) {
                   j--
               } else {
@@ -87,11 +106,13 @@ const Sort = {
               }
             }
             if (a[j] < stand) {
-                this.operations.push([i, j, 'exchange']);
+                // this.operations.push([i, j, 'exchange']);
+                this.addOprations([i, j, 'exchange']);
                 this.exch(a, i, j);
             }
             while (j > i) {
-                this.operations.push([i, j, 'compare']);
+                // this.operations.push([i, j, 'compare']);
+                this.addOprations([i, j, 'compare']);
                 if (a[i] < stand) {
                     i++
                 } else {
@@ -99,7 +120,8 @@ const Sort = {
                 }
             }
             if (a[i] > stand) {
-                this.operations.push([i, j, 'exchange']);
+                // this.operations.push([i, j, 'exchange']);
+                this.addOprations([i, j, 'exchange']);
                 this.exch(a, i, j);
             }
         }
@@ -110,6 +132,21 @@ const Sort = {
 
     quickSort (arr) {
         this._quickSort(arr, 0, arr.length - 1);
+    },
+
+    addOprations (opt) {
+        const type = opt[2];
+        if (type === 'exchange') {
+            this.exchangeNum++;
+        } else if (type === 'compare') {
+            this.diffNum++;
+        }
+        this.operations.push(opt);
+        this.operations.push([
+            `比较次数:${this.diffNum} 交换次数:${this.exchangeNum}`, 
+            undefined, 
+            'info'
+        ]);
     },
 
     run (arr, type) {
