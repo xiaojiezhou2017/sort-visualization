@@ -153,6 +153,8 @@ const Sort = {
 
     run (arr, type) {
         this.operations = [];
+        this.diffNum = 0;
+        this.exchangeNum = 0;
         this[type](arr);
         return this.operations;
     }
