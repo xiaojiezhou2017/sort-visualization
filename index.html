@@ -14,6 +14,7 @@
         <button onclick="handleChose('insertSort')">插入排序</button>
         <button onclick="handleChose('choiceSort')">选择排序</button>
         <button onclick="handleChose('quickSort')">快速排序</button>
+        <button onclick="handleShuffle()">重新打乱数组</button>
         <button onClick="handleNext()">单步调试(下一步)</button>
         <button onClick="handleAll()">一次执行完动画</button>
         <h2 id="info"></h2>
@@ -41,6 +42,11 @@
 <script src="render.js"></script>
 <script src="alg.js"></script>
 <script>
+    let arr = [];
+    for (let i = 0; i < 15; i++) {
+            arr[i] = i;
+    }
+
     function handleNext (event) {
         render.next();
     }
@@ -51,6 +57,10 @@
 
     function handleReset () {
         render.reset();
+    }
+
+    function handleShuffle () {
+        shuffle(arr);
     }
 
     // 打乱数组的顺序
@@ -66,11 +76,8 @@
 
     function handleChose (t) {
         render.reset();
-        let arr = [];
-        for (let i = 0; i < 15; i++) {
-            arr[i] = i;
-        }
-        shuffle(arr);
+       
+        
         render.render(arr);
         const opts = Sort.run(arr, t);
         render.reset();
