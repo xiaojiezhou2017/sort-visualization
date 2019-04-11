@@ -80,7 +80,7 @@
        
         
         render.render(arr);
-        const opts = Sort.run(arr, t);
+        const opts = Sort.run(arr.slice(), t);
         render.reset();
         render.pushAction(opts);
         render.speed = 50;
