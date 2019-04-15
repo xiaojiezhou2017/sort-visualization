@@ -45,13 +45,12 @@ const Sort = {
         while (h >= 1) {
             for (let i = h; i < len; i++) {
                 for (let j = i; j >= h; j-=h) {
-                    // this.operations.push([j-h, j, 'compare'])
                     this.addOprations([j-h, j, 'compare']);
-                    if (a[j] < a[j-h]) {
-                        // this.operations.push([j-h, j, 'exchange'])
-                        this.addOprations([j-h, j, 'exchange']);
-                        this.exch(a, j, j-h);
+                    if (a[j] > a[j-h]) {
+                        break;
                     }
+                    this.addOprations([j-h, j, 'exchange']);
+                    this.exch(a, j, j-h);
                 }
             }
             h = parseInt(h / 3)
