@@ -136,16 +136,45 @@ const Sort = {
         this._quickSort(a, j+1, end);
     },
 
+    // 二分法查找
+    _binarySearch (arr, start, end, target) {
+        this.addOprations([`查找的值:${target}, 当前中间值: `, undefined, 'info'], false);
+        if (start >= end) {
+            return; 
+        }
+        const mid = start +  (Math.floor((end - start) / 2));
+        this.addOprations([`查找的值:${target}, 当前中间值: ${mid}`, undefined, 'info'], false);
+        this.addOprations([mid, mid, 'exchange'], false);
+        const midValue = arr[mid];
+        if (midValue === target) {
+            return mid;
+        }
+        if (target > midValue) {
+            this.addOprations([mid+1, end, 'compare'], false);
+            return this._binarySearch(arr, mid+1, end, target);
+        } else {
+            this.addOprations([start, mid, 'compare'], false);
+            return this._binarySearch(arr, start, mid, target);
+        }
+    },
+
+    binarySearch (arr) {
+        const target = Math.floor(Math.random() * 15);
+        this._binarySearch(arr,0, arr.length - 1, target);
+    },
+
     quickSort (arr) {
         this._quickSort(arr, 0, arr.length - 1);
     },
 
-    addOprations (opt) {
-        this.operations.push([
-            `比较次数:${this.diffNum} 交换次数:${this.exchangeNum} 基准元素：${this.stand}`, 
-            undefined, 
-            'info'
-        ]);
+    addOprations (opt, isSort = true) {
+        if (isSort) {
+            this.operations.push([
+                `比较次数:${this.diffNum} 交换次数:${this.exchangeNum} 基准元素：${this.stand}`, 
+                undefined, 
+                'info'
+            ]);
+        }
         const type = opt[2];
         if (type === 'exchange') {
             this.exchangeNum++;

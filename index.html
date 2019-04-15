@@ -15,6 +15,7 @@
         <button onclick="handleChose('bubbleSort')">冒泡排序</button>
         <button onclick="handleChose('choiceSort')">选择排序</button>
         <button onclick="handleChose('quickSort')">快速排序</button>
+        <button onclick="handleChose('binarySearch', false)">二分法查找</button>
         <button onclick="handleShuffle()">重新打乱数组</button>
         <button onClick="handleNext()">单步调试(下一步)</button>
         <button onClick="handleAll()">一次执行完动画</button>
@@ -50,12 +51,16 @@
 <script src="render.js"></script>
 <script src="alg.js"></script>
 <script>
-    let arr = [];
-    for (let i = 0; i < 15; i++) {
-            arr[i] = i;
-    }
+
+    let arr = generateArr(15);
     const baseSpeed = render.speed;
     shuffle(arr);
+
+
+    function generateArr (length) {
+        const arr = Array.apply(null, { length }).map((i, index) => i = index);
+        return arr;
+    }
 
     function handleNext (event) {
         render.next();
@@ -89,10 +94,17 @@
         }
     }
 
-    function handleChose (t) {
+    function handleChose (t, isSort = true) {
         render.reset();
-        render.render(arr);
-        const opts = Sort.run(arr.slice(), t);
+        let opts = [];
+        if (isSort) {
+            render.render(arr);
+            opts = Sort.run(arr.slice(), t);
+        } else {
+            let rawArr = generateArr(15);
+            render.render(rawArr);
+            opts = Sort.run(rawArr, t);
+        }
         render.reset();
         render.pushAction(opts);
         render.speed = 50;
