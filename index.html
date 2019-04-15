@@ -12,11 +12,19 @@
     <div>
         <button onclick="handleChose('shellSort')">希尔排序</button>
         <button onclick="handleChose('insertSort')">插入排序</button>
+        <button onclick="handleChose('bubbleSort')">冒泡排序</button>
         <button onclick="handleChose('choiceSort')">选择排序</button>
         <button onclick="handleChose('quickSort')">快速排序</button>
         <button onclick="handleShuffle()">重新打乱数组</button>
         <button onClick="handleNext()">单步调试(下一步)</button>
         <button onClick="handleAll()">一次执行完动画</button>
+
+        <button onClick="setSpeed(0.5)">0.5倍速度</button>
+        <button onClick="setSpeed(1)">1倍速度</button>
+        <button onClick="setSpeed(2)">2倍速度</button>
+        <button onClick="setSpeed(4)">4倍速度</button>
+        <button onClick="setSpeed(8)">8倍速度</button>
+        <button onClick="setSpeed(16)">16倍速度</button>
         <h2 id="info"></h2>
     </div>
 </body>
@@ -46,6 +54,7 @@
     for (let i = 0; i < 15; i++) {
             arr[i] = i;
     }
+    const baseSpeed = render.speed;
     shuffle(arr);
 
     function handleNext (event) {
@@ -64,6 +73,11 @@
         shuffle(arr);
     }
 
+    function setSpeed (ratio) {
+        const speed = baseSpeed / ratio;
+        render.setSpeed(speed);
+    }
+
     // 打乱数组的顺序
     function shuffle (arr) {
         const getRandom = (start, end) => start + Math.floor(Math.random() * (end - start));
@@ -77,8 +91,6 @@
 
     function handleChose (t) {
         render.reset();
-       
-        
         render.render(arr);
         const opts = Sort.run(arr.slice(), t);
         render.reset();

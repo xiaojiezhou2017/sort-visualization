@@ -8,6 +8,10 @@ const render = {
     children: null,
     status: 'finished',
     isStop: false,
+    // 设置速度
+    setSpeed (speed) {
+        this.speed = speed;
+    },
     render (data) {
         const wrapper = document.querySelector('.wrapper');
         const fragment  =  document.createDocumentFragment();

@@ -37,11 +37,6 @@ const Sort = {
     },
     // 希尔排序
     shellSort (a) {
-        this.operations.push([
-            `选择排序: 比较次数:${this.diffNum} 交换次数:${this.exchangeNum}`, 
-            undefined, 
-            'info'
-        ]);
         const len = a.length;
         let h = 1;
         while (h < len / 3) {
@@ -63,23 +58,33 @@ const Sort = {
             console.log('h', h)
         }
     },
+    // 冒泡排序
+    bubbleSort (a) {
+        const len = a.length;
+        for (let i = 0; i < len -1; i++) {
+            for (let j = 0; j < len - i - 1; j++) {
+                this.addOprations([j, j+1, 'compare']);
+                if (a[j] > a[j+1]) {
+                    this.addOprations([j, j+1, 'exchange']);
+                    this.exch(a, j, j+1);
+                }
+            }
+        }
+    },
+
     // 简单插入排序
     insertSort (a) {
-        this.operations.push([
-            `选择排序: 比较次数:${this.diffNum} 交换次数:${this.exchangeNum}`, 
-            undefined, 
-            'info'
-        ]);
         const len = a.length;
         for (let i = 0; i < len; i++) {
             for (let j = i; j > 0; j--) {
-                // this.operations.push([j-1, j, 'compare'])
                 this.addOprations([j-1, j, 'compare']);
-                if (a[j] < a[j-1]) {
-                    // this.operations.push([j-1, j, 'exchange'])
-                    this.addOprations([j-1, j, 'exchange']);
-                    this.exch(a, j, j-1)
+                this.stand = a[j];
+                // 这里是为了添加比较操作，猜这么写，其实好的写法应该是  for (let j = i; j > 0 && a[j] < a[j-1]; j--) {}
+                if (a[j] > a[j-1]) {
+                    break;
                 }
+                this.addOprations([j-1, j, 'exchange']);
+                this.exch(a, j, j-1)
             }
         }
     },
@@ -137,6 +142,11 @@ const Sort = {
     },
 
     addOprations (opt) {
+        this.operations.push([
+            `比较次数:${this.diffNum} 交换次数:${this.exchangeNum} 基准元素：${this.stand}`, 
+            undefined, 
+            'info'
+        ]);
         const type = opt[2];
         if (type === 'exchange') {
             this.exchangeNum++;
@@ -144,11 +154,6 @@ const Sort = {
             this.diffNum++;
         }
         this.operations.push(opt);
-        this.operations.push([
-            `比较次数:${this.diffNum} 交换次数:${this.exchangeNum} 基准元素：${this.stand}`, 
-            undefined, 
-            'info'
-        ]);
     },
 
     run (arr, type) {
