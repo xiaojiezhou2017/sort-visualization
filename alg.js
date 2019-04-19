@@ -54,7 +54,6 @@ const Sort = {
                 }
             }
             h = parseInt(h / 3)
-            console.log('h', h)
         }
     },
     // 冒泡排序
@@ -96,42 +95,34 @@ const Sort = {
         const stand = a[start];
         this.stand = stand;
         // 表示基准
-        // this.operations.push([start, end, 'moveTwo']);
         this.addOprations([start, end, 'moveTwo']);
-        // this.operations.push([start, start, 'exchange']);
         let i = start;
-        let j = end;
-        while (i < j) {
-            while (j > i) {
-              // this.operations.push([j, i, 'compare']);
-              this.addOprations([j, i, 'compare']);
-              if (a[j] > stand) {
-                  j--
-              } else {
-                  break;
-              }
-            }
-            if (a[j] < stand) {
-                // this.operations.push([i, j, 'exchange']);
-                this.addOprations([i, j, 'exchange']);
-                this.exch(a, i, j);
-            }
-            while (j > i) {
-                // this.operations.push([i, j, 'compare']);
-                this.addOprations([i, j, 'compare']);
-                if (a[i] < stand) {
-                    i++
-                } else {
+        let j = end+1;
+        while (true) {
+            while (true) {
+                this.addOprations([start, i === end ? end : i+1, 'compare']);
+                if (i === end || a[++i] > stand) {
+                    this.addOprations([i, undefined, 'flag']);
                     break;
                 }
             }
-            if (a[i] > stand) {
-                // this.operations.push([i, j, 'exchange']);
-                this.addOprations([i, j, 'exchange']);
-                this.exch(a, i, j);
+            while (true) {
+                this.addOprations([start,j === start ? start : j-1, 'compare']); 
+                if (j === start || a[--j] < stand) {
+                    this.addOprations([j, undefined, 'flag']);
+                    break;
+                }
             }
+            if (i >= j) {
+                break;
+            }
+            this.addOprations([i,  j, 'exchange']); 
+            this.addOprations([undefined, undefined, 'clearFlag']);
+            this.exch(a, i, j)
         }
-        // a[i] = stand;
+        this.addOprations([start,  j, 'exchange']); 
+        this.exch(a, start, j);
+        this.addOprations([j, undefined, 'clearFlag']);
         this._quickSort(a, start, j-1);
         this._quickSort(a, j+1, end);
     },

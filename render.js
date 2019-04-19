@@ -6,6 +6,7 @@ const render = {
     index: 0,
     animationQueue: [],
     children: null,
+    flagElements: [],
     status: 'finished',
     isStop: false,
     // 设置速度
@@ -44,16 +45,28 @@ const render = {
     getPosition (ele) {
         return parseInt(ele.style.left);
     },
-    // 查找高亮
-    heightLight (x, y) {
-        return new Promise((resolve, reject) => {
-            x.style.background = y.style.background = this.heightLightColor;
+
+    flagElement (x) {
+        return this.heightLightOne(x, 'yellow', false);
+    },
+
+    heightLightOne (x, color, isReset = true) {
+        const beforeColor = x.style.background;
+        const heightLightColor = color || this.heightLightColor;
+        return new Promise((resolve) => {
+            x.style.background = heightLightColor;
             setTimeout(() => {
-                x.style.background = y.style.background = '#fff'
+                isReset && (x.style.background = beforeColor);
                 resolve();
             }, this.speed * 30)
         })
     },
+
+    // 查找高亮
+    heightLight (x, y) {
+        return Promise.all([this.heightLightOne(x), this.heightLightOne(y)]);
+    },
+
     exchange (x, y, type) {
         if (type === 'info') {
           return this.showInfo(x);
@@ -61,6 +74,20 @@ const render = {
         const { getPosition }  = this;
         const xEle = this.getElement(x);
         const yEle = this.getElement(y);
+        if (type === 'flag') {
+            const flagTask = [this.flagElement(xEle)];
+            this.flagElements.push(xEle);
+            if (y) {
+                flagTask.push(this.flagElement(yEle));
+                this.flagElements.push(yEle);
+            }
+            return Promise.all(flagTask);
+        }
+        if (type === 'clearFlag') {
+            const clearTask = this.flagElements;
+            this.flagElements = [];
+            return Promise.all(clearTask.map(i => this.heightLightOne(i, '#fff', false)));
+        }
         // 在高亮而不是交换的时候，是不需要重新设置定义的索引的
         if (type === 'exchange') {
             xEle.index = y;
@@ -68,6 +95,7 @@ const render = {
         }
         const yPos = getPosition(yEle)
         const xPos = getPosition(xEle)
+      
         const R = (yPos - xPos) / 2;
         if (type === 'exchange') {
             if (x === y) {
