@@ -21,7 +21,7 @@ const render = {
             const div = document.createElement('div');
             div.setAttribute('class', 'child');
             div.setAttribute('id', i);
-            div.style.left = index * 50 + 'px';
+            div.style.left = index * 80 + 'px';
             div.innerHTML = i;
             div.style.height = size;
             div.style.width = size;
@@ -35,6 +35,7 @@ const render = {
     },
 
     getElement(id) {
+        if (id === undefined) return id; 
         if (!this.children) {
             this.children =  Array.from(document.querySelectorAll('.child'));
             this.children.forEach((i, index) => i.index = index);
@@ -46,28 +47,42 @@ const render = {
         return parseInt(ele.style.left);
     },
 
-    flagElement (x) {
-        return this.heightLightOne(x, 'yellow', false);
+    flagElement (x, desc) {
+        return this.heightLightOne(x, 'yellow', desc || '', false);
     },
 
-    heightLightOne (x, color, isReset = true) {
+    heightLightOne (x, color, desc,  isReset = true) {
         const beforeColor = x.style.background;
         const heightLightColor = color || this.heightLightColor;
+        if (!x.desc) {
+            const flagDesc = document.createElement('span');
+            flagDesc.setAttribute('class',  'flag-desc')
+            flagDesc.desc = desc;
+            x.desc = flagDesc;
+            x.appendChild(flagDesc);
+        } 
+        x.desc.innerHTML = desc;
         return new Promise((resolve) => {
             x.style.background = heightLightColor;
             setTimeout(() => {
-                isReset && (x.style.background = beforeColor);
+                if (isReset) {
+                    x.style.background = beforeColor;
+                    x.desc.innerHTML = '';
+                }
                 resolve();
             }, this.speed * 30)
         })
     },
 
     // 查找高亮
-    heightLight (x, y) {
-        return Promise.all([this.heightLightOne(x), this.heightLightOne(y)]);
+    heightLight (x, y, desc = []) {
+        const [firstDesc = '', secondDesc = ''] = desc;
+        console.log('firstDesc', firstDesc);
+        console.log('secondDesc', secondDesc);
+        return Promise.all([this.heightLightOne(x, undefined, firstDesc), this.heightLightOne(y, undefined, secondDesc)]);
     },
 
-    exchange (x, y, type) {
+    exchange (x, y, type, desc) {
         if (type === 'info') {
           return this.showInfo(x);
         }
@@ -75,18 +90,22 @@ const render = {
         const xEle = this.getElement(x);
         const yEle = this.getElement(y);
         if (type === 'flag') {
-            const flagTask = [this.flagElement(xEle)];
-            this.flagElements.push(xEle);
+            const flagTask = [this.flagElement(xEle, desc[0])];
+            if (!desc.remain) {
+                this.flagElements.push(xEle);
+            }
             if (y) {
-                flagTask.push(this.flagElement(yEle));
-                this.flagElements.push(yEle);
+                flagTask.push(this.flagElement(yEle, desc[1]));
+                if (!desc.remain) {
+                    this.flagElements.push(yEle);
+                }
             }
             return Promise.all(flagTask);
         }
         if (type === 'clearFlag') {
             const clearTask = this.flagElements;
             this.flagElements = [];
-            return Promise.all(clearTask.map(i => this.heightLightOne(i, '#fff', false)));
+            return Promise.all(clearTask.map(i => this.heightLightOne(i, '#fff', '', false)));
         }
         // 在高亮而不是交换的时候，是不需要重新设置定义的索引的
         if (type === 'exchange') {
@@ -104,7 +123,7 @@ const render = {
                 return Promise.all([this.move(xEle, R, true, xPos), this.move(yEle, R, false, yPos)]);
             }
         } else if (type === 'compare')  {
-            return this.heightLight(xEle, yEle);
+            return this.heightLight(xEle, yEle, desc);
         } else if (type === 'moveTwo') {
             return this.moveLineTwo(xEle, yEle);
         }
@@ -188,7 +207,7 @@ const render = {
         const animationQueue = this.animationQueue.slice();
         const an = animationQueue[this.index];
         if (an) {
-            await this.exchange(an[0], an[1], an[2]);
+            await this.exchange(an[0], an[1], an[2], an[3]);
             this.status = 'finished'
         } else {
             alert('排序结束');
@@ -205,7 +224,7 @@ const render = {
         while (animationQueue.length) {
             if (this.isStop) break;
             const an = animationQueue.shift();
-            await this.exchange(an[0], an[1], an[2]);
+            await this.exchange(an[0], an[1], an[2], an[3]);
         }
     },
 

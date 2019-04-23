@@ -25,7 +25,7 @@ const Sort = {
             let minIndex = i;
             for (let j = i+1; j < len; j++) {
                 // this.operations.push([minIndex, j, 'compare'])
-                this.addOprations([minIndex, j, 'compare']);
+                this.addOprations([minIndex, j, 'compare', ['最小值']]);
                 if (a[minIndex] > a[j]) {
                     minIndex = j;
                 }
@@ -95,21 +95,21 @@ const Sort = {
         const stand = a[start];
         this.stand = stand;
         // 表示基准
-        this.addOprations([start, end, 'moveTwo']);
+        this.addOprations([start, end, 'compare', ['左边界', '右边界']]);
         let i = start;
         let j = end+1;
         while (true) {
             while (true) {
-                this.addOprations([start, i === end ? end : i+1, 'compare']);
+                this.addOprations([start, i === end ? end : i+1, 'compare', ['', 'i指针']]);
                 if (i === end || a[++i] > stand) {
-                    this.addOprations([i, undefined, 'flag']);
+                    this.addOprations([i, undefined, 'flag', ['i指针']]);
                     break;
                 }
             }
             while (true) {
-                this.addOprations([start,j === start ? start : j-1, 'compare']); 
+                this.addOprations([start,j === start ? start : j-1, 'compare', ['', 'j指针']]); 
                 if (j === start || a[--j] < stand) {
-                    this.addOprations([j, undefined, 'flag']);
+                    this.addOprations([j, undefined, 'flag', ['j指针']]);
                     break;
                 }
             }
@@ -128,30 +128,35 @@ const Sort = {
     },
 
     // 二分法查找
-    _binarySearch (arr, start, end, target) {
+    _binarySearch (arr, start, end, target, index) {
         this.addOprations([`查找的值:${target}, 当前中间值: `, undefined, 'info'], false);
         if (start >= end) {
             return; 
         }
         const mid = start +  (Math.floor((end - start) / 2));
-        this.addOprations([`查找的值:${target}, 当前中间值: ${mid}`, undefined, 'info'], false);
+        const desc = ['目标值'];
+        desc.remain = true;
+        this.addOprations([index, undefined, 'flag', desc], false);
         this.addOprations([mid, mid, 'exchange'], false);
+        this.addOprations([mid, undefined, 'flag', ['中间值']], false);
+        this.addOprations([undefined, undefined, 'clearFlag'], false);
+        this.addOprations([`查找的值:${target}, 当前中间值: ${mid}`, undefined, 'info'], false);
         const midValue = arr[mid];
         if (midValue === target) {
             return mid;
         }
         if (target > midValue) {
-            this.addOprations([mid+1, end, 'compare'], false);
-            return this._binarySearch(arr, mid+1, end, target);
+            this.addOprations([mid+1, end, 'compare', ['左边界', '右边界']], false);
+            return this._binarySearch(arr, mid+1, end, target, index);
         } else {
-            this.addOprations([start, mid, 'compare'], false);
-            return this._binarySearch(arr, start, mid, target);
+            this.addOprations([start, mid, 'compare', ['左边界', '右边界']], false);
+            return this._binarySearch(arr, start, mid, target, index);
         }
     },
 
     binarySearch (arr) {
-        const target = Math.floor(Math.random() * 15);
-        this._binarySearch(arr,0, arr.length - 1, target);
+        const targetIndex = Math.floor(Math.random() * 15);
+        this._binarySearch(arr,0, arr.length - 1, arr[targetIndex], targetIndex);
     },
 
     quickSort (arr) {
