@@ -146,13 +146,16 @@ const Sort = {
         this.addOprations([`查找的值:${target}, 当前中间值: ${mid}`, undefined, 'info'], false);
         const midValue = arr[mid];
         if (midValue === target) {
+            this.addOprations([mid, undefined, 'flag', [`查找到目标值${target}`]], false);
             return mid;
         }
         if (target > midValue) {
-            this.addOprations([mid+1, end, 'compare', ['左边界', '右边界']], false);
+            this.addOprations([mid, undefined, 'flag', ['小于目标值, 在右侧寻找->']], false);
+            this.addOprations([mid+1, end, 'compare'], false);
             return this._binarySearch(arr, mid+1, end, target, index);
         } else {
-            this.addOprations([start, mid, 'compare', ['左边界', '右边界']], false);
+            this.addOprations([mid, undefined, 'flag', ['<-大于目标值,在左侧寻找']], false)
+            this.addOprations([start, mid, 'compare'], false);
             return this._binarySearch(arr, start, mid, target, index);
         }
     },
