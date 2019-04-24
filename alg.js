@@ -114,6 +114,9 @@ const Sort = {
                 }
             }
             if (i >= j) {
+                if (i === j) {
+                    this.addOprations([i, undefined, 'flag', ['i和j指针相遇']])
+                }
                 break;
             }
             this.addOprations([i,  j, 'exchange']); 
