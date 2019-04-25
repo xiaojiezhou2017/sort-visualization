@@ -13,6 +13,6 @@
 
 接下来会实现二叉树的遍历和二叉树查找。 另外怎么根据根据边长和角度来绘制一个比较好看的二叉树呢？ 
 
-[二叉树网址](https://xiaojiezhou2017.github.io/binaryTree/)
+[堆排序展示网址](https://xiaojiezhou2017.github.io/binaryTree/)
 
 
